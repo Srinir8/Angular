@@ -1,30 +1,35 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css'
+  styleUrls: ['./sign-up.component.css']
 })
 export class SignUpComponent {
-  username: string;
-  password: string;
-  email: string;
+  username: string = '';
+  password: string = '';
+  email: string = '';
+  message: string = '';
 
-  constructor() {
-    this.username = '';
-    this.password = '';
-    this.email = '';
-  }
+  constructor(private apiService: ApiService) {}
 
   onSubmit() {
-    // Handle sign-up logic here
-    console.log('User signed up with:', {
-      username: this.username,
-      email: this.email,
-      password: this.password
-    });
+    const user = { email: this.email, username: this.username, password: this.password };
+    this.apiService.registerUser(user).subscribe(
+      (response) => {
+        this.message = 'Registration successful!';
+        console.log('User registered successfully:', response);
+      },
+      (error) => {
+        this.message = 'Error: ' + error.error.message;
+        console.error('Error registering user:', error);
+      }
+    );
   }
 }
