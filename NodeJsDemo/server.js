@@ -21,6 +21,8 @@ app.post("/api/register", (req, res) => {
 
     // Add the new user to the in-memory array
     users.push({ email, username, password });
+    console.log("User registered successfully:", { email, username, password }); // Debugging
+    console.log("Current users array:", users); // Debugging
     res.status(201).json({ message: "User registered successfully" });
 });
 
@@ -28,11 +30,17 @@ app.post("/api/register", (req, res) => {
 app.post("/api/login", (req, res) => {
     const { username, password } = req.body;
 
+    console.log("Login request received:", { username, password }); // Debugging
+    console.log("Current users array:", users); // Debugging
+
     // Check if the user exists and the password matches
     const user = users.find(user => user.username === username && user.password === password);
+
     if (user) {
+        console.log("Login successful for user:", username); // Debugging
         return res.status(200).json({ success: true, message: "Login successful" });
     } else {
+        console.log("Invalid login attempt:", { username, password }); // Debugging
         return res.status(401).json({ success: false, message: "Invalid username or password" });
     }
 });
